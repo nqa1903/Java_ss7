@@ -18,13 +18,13 @@ class User{
         return username;
     }
 
-    public void setPassword(String password){
-        this.password = password;
+    public boolean checkPassword(String password){
+        return this.password.equalsIgnoreCase(password);
     }
 
-    public void displayInfo(){
-        System.out.println("Id : " + id);
-        System.out.println("Username : "+username);
+    @Override
+    public String toString(){
+        return "User[id = " + id + " , name : " + username + "]";
     }
 }
 
@@ -42,30 +42,39 @@ class UserManager{
         }
     }
 
-    public static User findUsername(String username){
-        for(int i = 0 ; i < users.length ; i++){
-            if(users[i].getUsername().equalsIgnoreCase(username)){
-                return users[i];
+    public static boolean checkLogin(String username , String password){
+        for(int i = 0 ; i < count ; i++){
+            if(users[i].getUsername().equalsIgnoreCase(username) && users[i].checkPassword(password)){
+                return true;
             }
         }
-        return null;
+        return false;
+    }
+
+    public static void showAllUsers(){
+        System.out.println("Danh sach nguoi dung :");
+        for(int i = 0 ; i < count ; i++){
+            System.out.println((i + 1) + ". " +users[i]);
+        }
     }
 }
 
 public class B6 {
     public static void main(String[] args){
         User u1 = new User(1 , "anh" , "190303");
-        User u2 = new User(2 , "quang anh" , "190303");
+        User u2 = new User(2 , "quang anh" , "190303anh");
+        User u3 = new User(3 , "anh quang" , "190303quang");
 
         UserManager.addUser(u1);
         UserManager.addUser(u2);
+        UserManager.addUser(u3);
 
-        User found = UserManager.findUsername("anh");
-        if(found != null){
-            System.out.println("Da tim thay user : ");
-            found.displayInfo();
-        }else{
-            System.out.println("Khong tim thay user");
-        }
+        System.out.println("Da them 3 user");
+        UserManager.showAllUsers();
+
+        System.out.println("Kiem tra dang nhap");
+        System.out.println("Dang nhap : (anh , 190303) : " + (UserManager.checkLogin("anh" , "190303") ? "Thanh cong" : "That bai"));
+        System.out.println("Dang nhap : (anh quang , 190303) : " + (UserManager.checkLogin("anh quang" , "190303") ? "Thanh cong" : "That bai"));
+
     }
 }
